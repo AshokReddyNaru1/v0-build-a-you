@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FarmApp - Your Smart Farming Companion</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-background text-foreground font-sans">
+    <!-- Login Page -->
+    <div id="loginPage" class="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-emerald-100 p-4">
+        <div class="w-full max-w-md bg-white rounded-lg shadow-lg border border-gray-200">
+            <div class="p-6 text-center">
+                <div class="flex justify-center mb-4">
+                    <div class="p-3 bg-green-100 rounded-full">
+                        <i data-lucide="sprout" class="h-8 w-8 text-green-600"></i>
+                    </div>
+                </div>
+                <h1 class="text-2xl font-bold text-green-800 mb-2">FarmApp</h1>
+                <p class="text-gray-600">Your smart farming companion</p>
+            </div>
+            <div class="p-6 pt-0">
+                <form id="loginForm" class="space-y-4">
+                    <div class="space-y-2">
+                        <label for="email" class="text-sm font-medium">Email</label>
+                        <input
+                            id="email"
+                            type="email"
+                            placeholder="Enter your email"
+                            class="w-full h-12 px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                        />
+                    </div>
+                    <div class="space-y-2">
+                        <label for="password" class="text-sm font-medium">Password</label>
+                        <input
+                            id="password"
+                            type="password"
+                            placeholder="Enter your password"
+                            class="w-full h-12 px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                        />
+                    </div>
+                    <button type="submit" class="w-full h-12 bg-green-600 hover:bg-green-700 text-white rounded-md font-medium transition-colors">
+                        Login
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Home Page -->
+    <div id="homePage" class="hidden min-h-screen bg-background pb-20">
+        <div class="container mx-auto px-4 py-6">
+            <!-- Social Media Feed -->
+            <div id="socialContent" class="space-y-6">
+                <div class="bg-white rounded-lg shadow-sm border p-4">
+                    <h2 class="text-xl font-semibold mb-4 text-green-800">Registered Crops Overview</h2>
+                    <div class="chart-container">
+                        <canvas id="cropsOverviewChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="flex space-x-2 mb-4">
+                    <button class="px-4 py-2 bg-green-600 text-white rounded-md active-tab" onclick="filterFeed('all')">All</button>
+                    <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md" onclick="filterFeed('weather')">Weather</button>
+                    <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md" onclick="filterFeed('market')">Market</button>
+                    <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md" onclick="filterFeed('schemes')">Schemes</button>
+                </div>
+
+                <div class="space-y-4" id="feedContainer">
+                    <!-- Weather Alert Card -->
+                    <div class="bg-white rounded-lg shadow-sm border p-4 feed-card weather-card">
+                        <div class="flex items-center space-x-3 mb-3">
+                            <div class="p-2 bg-blue-100 rounded-full">
+                                <i data-lucide="cloud-rain" class="h-5 w-5 text-blue-600"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold">Weather Alert</h3>
+                                <p class="text-sm text-gray-500">2 hours ago</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-700 mb-3">Heavy rainfall expected in your area tomorrow. Avoid pesticide application.</p>
+                        <div class="flex items-center space-x-4 text-sm text-gray-500">
+                            <button class="flex items-center space-x-1 hover:text-green-600">
+                                <i data-lucide="heart" class="h-4 w-4"></i>
+                                <span>24</span>
+                            </button>
+                            <button class="flex items-center space-x-1 hover:text-green-600">
+                                <i data-lucide="message-circle" class="h-4 w-4"></i>
+                                <span>8</span>
+                            </button>
+                            <button class="flex items-center space-x-1 hover:text-green-600">
+                                <i data-lucide="share" class="h-4 w-4"></i>
+                                <span>Share</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Government Scheme Card -->
+                    <div class="bg-white rounded-lg shadow-sm border p-4 feed-card schemes-card">
+                        <div class="flex items-center space-x-3 mb-3">
+                            <div class="p-2 bg-orange-100 rounded-full">
+                                <i data-lucide="building" class="h-5 w-5 text-orange-600"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold">PM-KISAN Scheme</h3>
+                                <p class="text-sm text-gray-500">Government of India</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-700 mb-3">New beneficiaries can now apply for PM-KISAN scheme. Get ₹6000 annually in 3 installments.</p>
+                        <div class="chart-container mb-3">
+                            <canvas id="schemeChart"></canvas>
+                        </div>
+                        <div class="flex items-center space-x-4 text-sm text-gray-500">
+                            <button class="flex items-center space-x-1 hover:text-green-600">
+                                <i data-lucide="heart" class="h-4 w-4"></i>
+                                <span>156</span>
+                            </button>
+                            <button class="flex items-center space-x-1 hover:text-green-600">
+                                <i data-lucide="message-circle" class="h-4 w-4"></i>
+                                <span>42</span>
+                            </button>
+                            <button class="flex items-center space-x-1 hover:text-green-600">
+                                <i data-lucide="share" class="h-4 w-4"></i>
+                                <span>Share</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Market Price Card -->
+                    <div class="bg-white rounded-lg shadow-sm border p-4 feed-card market-card">
+                        <div class="flex items-center space-x-3 mb-3">
+                            <div class="p-2 bg-green-100 rounded-full">
+                                <i data-lucide="trending-up" class="h-5 w-5 text-green-600"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold">Market Prices</h3>
+                                <p class="text-sm text-gray-500">Today's rates</p>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-3 gap-4 mb-3">
+                            <div class="text-center">
+                                <p class="text-sm text-gray-500">Wheat</p>
+                                <p class="font-semibold text-green-600">₹2,150/q</p>
+                            </div>
+                            <div class="text-center">
+                                <p class="text-sm text-gray-500">Rice</p>
+                                <p class="font-semibold text-green-600">₹1,940/q</p>
+                            </div>
+                            <div class="text-center">
+                                <p class="text-sm text-gray-500">Cotton</p>
+                                <p class="font-semibold text-green-600">₹5,800/q</p>
+                            </div>
+                        </div>
+                        <div class="chart-container mb-3">
+                            <canvas id="marketChart"></canvas>
+                        </div>
+                        <div class="flex items-center space-x-4 text-sm text-gray-500">
+                            <button class="flex items-center space-x-1 hover:text-green-600">
+                                <i data-lucide="heart" class="h-4 w-4"></i>
+                                <span>89</span>
+                            </button>
+                            <button class="flex items-center space-x-1 hover:text-green-600">
+                                <i data-lucide="message-circle" class="h-4 w-4"></i>
+                                <span>23</span>
+                            </button>
+                            <button class="flex items-center space-x-1 hover:text-green-600">
+                                <i data-lucide="share" class="h-4 w-4"></i>
+                                <span>Share</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chat Box -->
+                <div class="bg-white rounded-lg shadow-sm border p-4">
+                    <h3 class="font-semibold mb-3">Community Chat</h3>
+                    <div class="space-y-2 mb-3 max-h-32 overflow-y-auto">
+                        <div class="text-sm">
+                            <span class="font-medium text-green-600">Rajesh:</span>
+                            <span class="text-gray-700">Anyone tried organic fertilizer for wheat?</span>
+                        </div>
+                        <div class="text-sm">
+                            <span class="font-medium text-green-600">Priya:</span>
+                            <span class="text-gray-700">Yes, great results! DM me for details.</span>
+                        </div>
+                    </div>
+                    <div class="flex space-x-2">
+                        <input type="text" placeholder="Type your message..." class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                        <button class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
+                            <i data-lucide="send" class="h-4 w-4"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Include other sections -->
+            <div id="cropDataContent" class="hidden space-y-6"></div>
+            <div id="predictionContent" class="hidden space-y-6"></div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-2">
+            <div class="flex justify-around">
+                <button class="flex flex-col items-center py-2 px-4 text-gray-600 hover:text-green-600" onclick="switchTab('crop-data')">
+                    <i data-lucide="database" class="h-6 w-6 mb-1"></i>
+                    <span class="text-xs">My Crop Data</span>
+                </button>
+                <button class="flex flex-col items-center py-2 px-4 text-green-600" onclick="switchTab('social')">
+                    <i data-lucide="globe" class="h-6 w-6 mb-1"></i>
+                    <span class="text-xs">Social Media</span>
+                </button>
+                <button class="flex flex-col items-center py-2 px-4 text-gray-600 hover:text-green-600" onclick="switchTab('prediction')">
+                    <i data-lucide="trending-up" class="h-6 w-6 mb-1"></i>
+                    <span class="text-xs">Prediction</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="charts.js"></script>
+    <script src="components.js"></script>
+</body>
+</html>
