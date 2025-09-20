@@ -67,6 +67,9 @@ const stateComparisonData = [
     wheatFarmers: 125000,
     riceFarmers: 89000,
     cottonFarmers: 45000,
+    wheatAcres: 850000,
+    riceAcres: 620000,
+    cottonAcres: 280000,
   },
   {
     state: "Haryana",
@@ -78,6 +81,9 @@ const stateComparisonData = [
     wheatFarmers: 98000,
     riceFarmers: 67000,
     cottonFarmers: 34000,
+    wheatAcres: 720000,
+    riceAcres: 480000,
+    cottonAcres: 210000,
   },
   {
     state: "UP",
@@ -89,6 +95,9 @@ const stateComparisonData = [
     wheatFarmers: 245000,
     riceFarmers: 189000,
     cottonFarmers: 78000,
+    wheatAcres: 1450000,
+    riceAcres: 1120000,
+    cottonAcres: 450000,
   },
   {
     state: "MP",
@@ -100,6 +109,9 @@ const stateComparisonData = [
     wheatFarmers: 156000,
     riceFarmers: 123000,
     cottonFarmers: 67000,
+    wheatAcres: 980000,
+    riceAcres: 750000,
+    cottonAcres: 380000,
   },
   {
     state: "Rajasthan",
@@ -111,6 +123,9 @@ const stateComparisonData = [
     wheatFarmers: 89000,
     riceFarmers: 45000,
     cottonFarmers: 56000,
+    wheatAcres: 560000,
+    riceAcres: 280000,
+    cottonAcres: 320000,
   },
 ]
 
@@ -199,11 +214,11 @@ export function PredictionDashboard() {
 
   const prediction = getCurrentPrediction()
 
-  const getCropFarmers = (crop: string) => {
-    const farmerKey = `${crop}Farmers` as keyof (typeof stateComparisonData)[0]
+  const getCropAcres = (crop: string) => {
+    const acreKey = `${crop}Acres` as keyof (typeof stateComparisonData)[0]
     return stateComparisonData.map((state) => ({
       state: state.state,
-      farmers: state[farmerKey] as number,
+      acres: state[acreKey] as number,
     }))
   }
 
@@ -493,18 +508,18 @@ export function PredictionDashboard() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <PieChart className="h-5 w-5" />
-                Crop Distribution by State
+                Crop Distribution by Acres in Each State
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
                 {stateComparisonData.map((state, index) => {
                   const cropDistribution = [
-                    { name: "Wheat", value: state.wheatFarmers, fill: "#f59e0b" },
-                    { name: "Rice", value: state.riceFarmers, fill: "#16a34a" },
-                    { name: "Cotton", value: state.cottonFarmers, fill: "#3b82f6" },
+                    { name: "Wheat", value: state.wheatAcres, fill: "#f59e0b" },
+                    { name: "Rice", value: state.riceAcres, fill: "#16a34a" },
+                    { name: "Cotton", value: state.cottonAcres, fill: "#3b82f6" },
                   ]
-                  const totalFarmers = state.wheatFarmers + state.riceFarmers + state.cottonFarmers
+                  const totalAcres = state.wheatAcres + state.riceAcres + state.cottonAcres
 
                   return (
                     <div key={index} className="text-center">
@@ -525,7 +540,7 @@ export function PredictionDashboard() {
                                 <Cell key={`cell-${idx}`} fill={entry.fill} />
                               ))}
                             </Pie>
-                            <Tooltip formatter={(value) => [value.toLocaleString(), "Farmers"]} />
+                            <Tooltip formatter={(value) => [value.toLocaleString(), "Acres"]} />
                           </PieChart>
                         </ResponsiveContainer>
                       </div>
@@ -535,26 +550,24 @@ export function PredictionDashboard() {
                             <div className="w-2 h-2 bg-amber-500 rounded"></div>
                             <span>Wheat</span>
                           </div>
-                          <span className="font-medium">{((state.wheatFarmers / totalFarmers) * 100).toFixed(1)}%</span>
+                          <span className="font-medium">{((state.wheatAcres / totalAcres) * 100).toFixed(1)}%</span>
                         </div>
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-1">
                             <div className="w-2 h-2 bg-green-600 rounded"></div>
                             <span>Rice</span>
                           </div>
-                          <span className="font-medium">{((state.riceFarmers / totalFarmers) * 100).toFixed(1)}%</span>
+                          <span className="font-medium">{((state.riceAcres / totalAcres) * 100).toFixed(1)}%</span>
                         </div>
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-1">
                             <div className="w-2 h-2 bg-blue-600 rounded"></div>
                             <span>Cotton</span>
                           </div>
-                          <span className="font-medium">
-                            {((state.cottonFarmers / totalFarmers) * 100).toFixed(1)}%
-                          </span>
+                          <span className="font-medium">{((state.cottonAcres / totalAcres) * 100).toFixed(1)}%</span>
                         </div>
                         <div className="pt-1 border-t border-gray-200 mt-2">
-                          <span className="font-semibold text-gray-700">{totalFarmers.toLocaleString()} Total</span>
+                          <span className="font-semibold text-gray-700">{(totalAcres / 1000).toFixed(0)}K Acres</span>
                         </div>
                       </div>
                     </div>
@@ -587,25 +600,24 @@ export function PredictionDashboard() {
               </div>
               <div className="mt-6 space-y-3">
                 <h4 className="font-medium text-sm text-muted-foreground">
-                  Number of Farmers Cultivating {selectedCrop.charAt(0).toUpperCase() + selectedCrop.slice(1)} by State
+                  Number of Acres Under {selectedCrop.charAt(0).toUpperCase() + selectedCrop.slice(1)} Cultivation by
+                  State
                 </h4>
                 <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-                  {getCropFarmers(selectedCrop).map((state, index) => (
+                  {getCropAcres(selectedCrop).map((state, index) => (
                     <div key={index} className="text-center p-3 bg-gray-50 rounded-lg">
-                      <div className="font-semibold text-lg text-green-700">{state.farmers.toLocaleString()}</div>
+                      <div className="font-semibold text-lg text-green-700">{(state.acres / 1000).toFixed(0)}K</div>
                       <div className="text-sm text-muted-foreground">{state.state}</div>
-                      <div className="text-xs text-muted-foreground mt-1">farmers</div>
+                      <div className="text-xs text-muted-foreground mt-1">acres</div>
                     </div>
                   ))}
                 </div>
                 <div className="text-center mt-4">
                   <div className="text-2xl font-bold text-green-600">
-                    {getCropFarmers(selectedCrop)
-                      .reduce((sum, state) => sum + state.farmers, 0)
-                      .toLocaleString()}
+                    {(getCropAcres(selectedCrop).reduce((sum, state) => sum + state.acres, 0) / 1000000).toFixed(1)}M
                   </div>
                   <div className="text-sm text-muted-foreground">
-                    Total {selectedCrop.charAt(0).toUpperCase() + selectedCrop.slice(1)} Farmers Across All States
+                    Total {selectedCrop.charAt(0).toUpperCase() + selectedCrop.slice(1)} Acres Across All States
                   </div>
                 </div>
               </div>
@@ -656,7 +668,7 @@ export function PredictionDashboard() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <MapPin className="h-5 w-5" />
-                Farmer Distribution by Crop & State
+                Acre Distribution by Crop & State
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -666,25 +678,25 @@ export function PredictionDashboard() {
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="state" />
                     <YAxis />
-                    <Tooltip formatter={(value) => [value.toLocaleString(), "Farmers"]} />
-                    <Bar dataKey="wheatFarmers" fill="#f59e0b" name="Wheat Farmers" />
-                    <Bar dataKey="riceFarmers" fill="#16a34a" name="Rice Farmers" />
-                    <Bar dataKey="cottonFarmers" fill="#3b82f6" name="Cotton Farmers" />
+                    <Tooltip formatter={(value) => [(value / 1000).toFixed(0) + "K", "Acres"]} />
+                    <Bar dataKey="wheatAcres" fill="#f59e0b" name="Wheat Acres" />
+                    <Bar dataKey="riceAcres" fill="#16a34a" name="Rice Acres" />
+                    <Bar dataKey="cottonAcres" fill="#3b82f6" name="Cotton Acres" />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
               <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 bg-amber-500 rounded"></div>
-                  <span>Wheat Farmers</span>
+                  <span>Wheat Acres</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 bg-green-600 rounded"></div>
-                  <span>Rice Farmers</span>
+                  <span>Rice Acres</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 bg-blue-600 rounded"></div>
-                  <span>Cotton Farmers</span>
+                  <span>Cotton Acres</span>
                 </div>
               </div>
             </CardContent>
@@ -693,7 +705,7 @@ export function PredictionDashboard() {
           {/* Detailed Crop Statistics */}
           <Card>
             <CardHeader>
-              <CardTitle>Detailed Crop & Farmer Statistics</CardTitle>
+              <CardTitle>Detailed Crop & Acre Statistics</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-6">
@@ -707,17 +719,18 @@ export function PredictionDashboard() {
                     {stateComparisonData.map((state, index) => (
                       <div key={index} className="text-center p-3 bg-amber-50 rounded-lg border border-amber-200">
                         <div className="font-semibold text-lg text-amber-700">
-                          {state.wheatFarmers.toLocaleString()}
+                          {(state.wheatAcres / 1000).toFixed(0)}K
                         </div>
                         <div className="text-sm text-muted-foreground">{state.state}</div>
                         <div className="text-xs text-amber-600 mt-1">{state.wheat} t/ha avg yield</div>
+                        <div className="text-xs text-muted-foreground">acres</div>
                       </div>
                     ))}
                   </div>
                   <div className="text-center mt-3">
                     <span className="text-xl font-bold text-amber-600">
-                      {stateComparisonData.reduce((sum, state) => sum + state.wheatFarmers, 0).toLocaleString()} Total
-                      Wheat Farmers
+                      {(stateComparisonData.reduce((sum, state) => sum + state.wheatAcres, 0) / 1000000).toFixed(1)}M
+                      Total Wheat Acres
                     </span>
                   </div>
                 </div>
@@ -731,16 +744,19 @@ export function PredictionDashboard() {
                   <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
                     {stateComparisonData.map((state, index) => (
                       <div key={index} className="text-center p-3 bg-green-50 rounded-lg border border-green-200">
-                        <div className="font-semibold text-lg text-green-700">{state.riceFarmers.toLocaleString()}</div>
+                        <div className="font-semibold text-lg text-green-700">
+                          {(state.riceAcres / 1000).toFixed(0)}K
+                        </div>
                         <div className="text-sm text-muted-foreground">{state.state}</div>
                         <div className="text-xs text-green-600 mt-1">{state.rice} t/ha avg yield</div>
+                        <div className="text-xs text-muted-foreground">acres</div>
                       </div>
                     ))}
                   </div>
                   <div className="text-center mt-3">
                     <span className="text-xl font-bold text-green-600">
-                      {stateComparisonData.reduce((sum, state) => sum + state.riceFarmers, 0).toLocaleString()} Total
-                      Rice Farmers
+                      {(stateComparisonData.reduce((sum, state) => sum + state.riceAcres, 0) / 1000000).toFixed(1)}M
+                      Total Rice Acres
                     </span>
                   </div>
                 </div>
@@ -755,17 +771,18 @@ export function PredictionDashboard() {
                     {stateComparisonData.map((state, index) => (
                       <div key={index} className="text-center p-3 bg-blue-50 rounded-lg border border-blue-200">
                         <div className="font-semibold text-lg text-blue-700">
-                          {state.cottonFarmers.toLocaleString()}
+                          {(state.cottonAcres / 1000).toFixed(0)}K
                         </div>
                         <div className="text-sm text-muted-foreground">{state.state}</div>
                         <div className="text-xs text-blue-600 mt-1">{state.cotton} t/ha avg yield</div>
+                        <div className="text-xs text-muted-foreground">acres</div>
                       </div>
                     ))}
                   </div>
                   <div className="text-center mt-3">
                     <span className="text-xl font-bold text-blue-600">
-                      {stateComparisonData.reduce((sum, state) => sum + state.cottonFarmers, 0).toLocaleString()} Total
-                      Cotton Farmers
+                      {(stateComparisonData.reduce((sum, state) => sum + state.cottonAcres, 0) / 1000000).toFixed(1)}M
+                      Total Cotton Acres
                     </span>
                   </div>
                 </div>
